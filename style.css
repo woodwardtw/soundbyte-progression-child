@@ -1,0 +1,168 @@
+/*
+ Theme Name:   Soundbyte Progression Child
+ Theme URI:    http://soundbyte.progressionstudios.com
+ Description:  Soundbyte Progression Child Theme
+ Author:       Mike Wesch and Ryan Klataske
+ Author URI:   http://anth101.com
+ Template:     soundbyte-progression
+ Version:      1.0.0
+ License:      GNU General Public License v2 or later
+ License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+ Tags:         personal
+ Text Domain:  soundbyte-progression
+*/
+
+
+#soundbyte-sidebar {
+    display: none;
+}
+
+#soundbyte-sidebar-container {
+    float: left;
+    width: 90%;
+}
+
+.label-wrap {
+    margin: 20px;
+    background-color: #cdeccb;
+    padding: 10px;
+}
+
+.ap-pro-form-field {
+    position: relative;
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+#soundbyte-page-title {
+   min-height: 350px;
+}
+
+.vc_custom_heading h4 {
+ text-shadow: 0px 0px 12px rgba(150, 150, 150, 1);
+}
+
+.sideways {
+	margin-bottom:20px;
+	display: inline-block;
+	width: 100%;
+}
+
+.sideways .listing-item {
+	display: inline-block;
+	width: 100%;
+	margin-top: 10px;
+	margin-bottom: 7px;
+	padding-bottom: 12px;
+	border-bottom: 3px solid #efefef;
+}
+
+.sideways img {
+	display: inline-block;
+	float: left;
+	margin-right: 20px;
+}
+
+.sideways .listing-item .title   {
+	display:block;
+	font-size: 1.2em;
+}
+
+.mobile-menu-icon-progression {
+	float: right;
+	background: rgba(26, 23, 26, 0.78);
+	color: #fff;
+        margin-top: 25px;
+
+}
+
+/* -------------------- BIG LAYOUT -------------------- */
+
+/* -------------------- SOUNDCLOUD LAYOUT -------------------- */
+@media only screen and (min-width: 960px) {
+.soundcloud-layout {
+	width: 100%;
+	float: left;
+}
+
+.listing-item {
+	float: left;
+	width: 30%;
+	margin-right: 7px;
+        margin-top: 7px;
+}
+
+.soundcloud-layout iframe {
+	width: 100% !important;
+	float: left;
+}
+
+}
+
+/* -------------------- MeDiUm LAYOUT -------------------- */
+
+/* -------------------- SOUNDCLOUD LAYOUT -------------------- */
+
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+.soundcloud-layout {
+	width: 100%;
+	float: left;
+}
+
+.listing-item {
+	float: left;
+	width: 40%;
+	margin-right: 7px;
+        margin-top: 7px;
+}
+
+.soundcloud-layout iframe {
+	width: 100% !important;
+	float: left;
+}
+
+.mobile-menu-icon-progression {
+	float: right;
+	background: rgba(26, 23, 26, 0.78);
+	color: #fff;
+        margin-top: 25px;
+
+}
+
+header#masthead-progression #logo {
+	float:left;
+}
+
+}
+
+/* -------------------- small LAYOUT -------------------- */
+
+/* -------------------- SOUNDCLOUD LAYOUT -------------------- */
+
+@media only screen and (max-width: 767px) {
+
+.soundcloud-layout {
+	width: 100%;
+	float: left;
+}
+
+.listing-item {
+	float: left;
+	width: 90%;
+        margin-top: 7px;
+	margin:auto;
+}
+
+.soundcloud-layout iframe {
+	width: 100% !important;
+	float: left;
+}
+
+#soundbyte-page-title {
+   min-height: 100px;
+}
+header#masthead-progression #logo {
+	float:left;
+}
+}
+
