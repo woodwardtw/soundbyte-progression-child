@@ -92,10 +92,9 @@
 }
 
 .personal-full {
-	margin: 10px;
+	margin: auto;
 	padding: 5px;
 	width: 80%;	
-	display: inline-block;
 }
 
 .personal-full-item {
