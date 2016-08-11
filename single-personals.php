@@ -40,24 +40,40 @@ get_header(); ?>
 				<?php get_template_part( 'template-parts/content', 'single' ); ?>
 
 				<!-- ######################  stuff to show the student or course content ######################### -->
+				</div>
 				<?php 
 				$stu_id = get_post_meta( get_the_ID(), 'stu_id', true );
 				// Check if the custom field has a value.				
 
 				$the_query = new WP_Query( array( 'tag' => $stu_id ) );
 
-				// The Loop
+				// The Loop				
 				if ( $the_query->have_posts() ) :
+				   echo '<div class="personal-images">';	
 				while ( $the_query->have_posts() ) : $the_query->the_post();
 				  $post_id = $post->ID;
-        		   echo get_the_post_thumbnail($post_id,'medium');
+				  //image previews across top 
+				   echo '<a href="' . get_permalink() . '">';
+        		   echo get_the_post_thumbnail($post_id,'thumbnail', array( 'class' => 'alignleft personal' ));
+        		   echo '</a>';
 				endwhile;
+				   echo '</div><div class="personal-full">';
+				while ( $the_query->have_posts() ) : $the_query->the_post();
+				  $post_id = $post->ID;
+				  //image previews across top 
+				   echo '<div class="personal-full-item"><h3><a href="' . get_permalink() . '">';
+        		   echo get_the_title();
+        		   echo '</a></h3>';
+				   $content = apply_filters( 'the_content', get_the_content() );
+				   echo $content . '</div>';
+
+				endwhile;
+				   echo '</div>';   
 				endif;
 				// Reset Post Data
 				wp_reset_postdata();
 
 				?>
-
 			<?php endwhile; // end of the loop. ?>
 
 			<?php if( get_option( 'page_for_posts' ) ) : $cover_page = get_page( get_option( 'page_for_posts' ) ); ?>

@@ -76,6 +76,39 @@
 
 }
 
+/* -------------------- Individual/Personal Page -------------------- */
+
+.personal-images {
+	margin-top: -40px;
+	margin-right: 10px;
+	margin-left: 10px;
+	width: 100%;
+	display: inline-block;
+}
+
+.personal:hover {
+	-webkit-filter: grayscale(100%); /* Chrome, Safari, Opera */
+    filter: grayscale(100%);
+}
+
+.personal-full {
+	margin: 10px;
+	padding: 5px;
+	width: 80%;	
+	display: inline-block;
+}
+
+.personal-full-item {
+		border-bottom: 3px #efefef solid;
+		margin-bottom: 15px;
+		padding: 10px;
+		border-bottom: 3px #424242 solid;
+}
+
+.personal-full-item:hover {
+	background-color: #efefef;
+}
+
 /* -------------------- BIG LAYOUT -------------------- */
 
 /* -------------------- SOUNDCLOUD LAYOUT -------------------- */
@@ -95,6 +128,12 @@
 .soundcloud-layout iframe {
 	width: 100% !important;
 	float: left;
+}
+
+/* personal page */
+
+.personal {
+	width: 15%;
 }
 
 }
@@ -125,12 +164,21 @@
 	float: right;
 	background: rgba(26, 23, 26, 0.78);
 	color: #fff;
-        margin-top: 25px;
+    margin-top: 25px;
 
 }
 
+
+/* header */
+
 header#masthead-progression #logo {
 	float:left;
+}
+
+/* personal page */
+
+.personal {
+	width: 22%;
 }
 
 }
@@ -164,5 +212,12 @@ header#masthead-progression #logo {
 header#masthead-progression #logo {
 	float:left;
 }
+
+/* personal page */
+
+.personal {
+	width: 44%;
+}
+
 }
 
