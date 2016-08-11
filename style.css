@@ -108,6 +108,12 @@
 	background-color: #efefef;
 }
 
+.personal-full-item .meta {
+	margin-top: -20px;
+    margin-bottom: 20px;
+    font-size: .9em;
+}
+
 /* -------------------- BIG LAYOUT -------------------- */
 
 /* -------------------- SOUNDCLOUD LAYOUT -------------------- */
