@@ -45,7 +45,10 @@ get_header(); ?>
 				$stu_id = get_post_meta( get_the_ID(), 'stu_id', true );
 				// Check if the custom field has a value.				
 
-				$the_query = new WP_Query( array( 'tag' => $stu_id ) );
+				$the_query = new WP_Query( array( 
+					'meta_key' => 'stu_id',                    //(string) - Custom field key.
+    				'meta_value' => $stu_id,                //(string) - Custom field value.
+				 ) );
 
 				// The Loop				
 				if ( $the_query->have_posts() ) :
@@ -61,9 +64,9 @@ get_header(); ?>
 				while ( $the_query->have_posts() ) : $the_query->the_post();
 				  $post_id = $post->ID;
 				  //image previews across top 
-				   echo '<div class="personal-full-item">';
+				   echo '<div class="personal-full-item"><a href="' . get_permalink() . '">';
 				   echo get_the_post_thumbnail($post_id,'full', array( 'class' => 'aligncenter personal-big' ));
-				   echo '<h3><a href="' . get_permalink() . '">';
+				   echo '</a><h3><a href="' . get_permalink() . '">';
         		   echo get_the_title();
         		   echo '</a></h3>';
         		   echo '<div class="meta">' . get_the_date() . '</div>';

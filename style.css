@@ -141,6 +141,10 @@
 	width: 15%;
 }
 
+.personal-big {
+	max-height: 700px;
+}
+
 }
 
 /* -------------------- MeDiUm LAYOUT -------------------- */
