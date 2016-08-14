@@ -42,18 +42,25 @@ get_header(); ?>
 				<!-- ######################  stuff to show the student or course content ######################### -->
 				</div>
 				<?php
-				$gid = $_GET['id'];
-				$gslink = 'https://spreadsheets.google.com/feeds/list/' . $gid . '/1/public/basic?alt=json';
-				$json = file_get_contents($gslink);
+				$gss_url = get_post_meta( get_the_ID(), 'gss_url', true );
+				$json_gss = 'https://spreadsheets.google.com/feeds/list'.substr($gss_url, 38) . '1/public/basic?alt=json';
+				// Check if the custom field has a value.				
+				
+    			
+				$json = @file_get_contents($json_gss);
+
+				if ( $json === false )
+					{
+					   echo '<div class="warning">Looks like your Google spreadsheet might not be public.<br> Try going back to the spreadsheet and choosing <em>File>Publish to the web.</em></div>';
+					} else {
+    								
 				$data = json_decode($json, TRUE);
 				$teamMembers = [];
 				//print_r($obj);
 				foreach ($data['feed']['entry'] as $item) {
 				  array_push($teamMembers, $item['title']['$t']);  
-				}				
-				?>
+				}
 
-				<?php 
 				$stu_id = get_post_meta( get_the_ID(), 'stu_id', true );
 				// Check if the custom field has a value.				
 
@@ -88,7 +95,7 @@ get_header(); ?>
 				endif;
 				// Reset Post Data
 				wp_reset_postdata();
-
+			}
 				?>
 			<?php endwhile; // end of the loop. ?>
 

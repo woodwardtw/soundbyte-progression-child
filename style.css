@@ -114,6 +114,15 @@
     font-size: .9em;
 }
 
+/* -------------------- Individual/Personal Page -------------------- */
+
+.warning {
+	margin: auto;
+	width: 70%;
+	border: 1px solid red;
+	padding: 8px;
+}
+
 /* -------------------- BIG LAYOUT -------------------- */
 
 /* -------------------- SOUNDCLOUD LAYOUT -------------------- */
