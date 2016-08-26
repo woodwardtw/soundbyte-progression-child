@@ -43,7 +43,17 @@ get_header(); ?>
 				</div>
 				<?php
 				$gss_url = get_post_meta( get_the_ID(), 'gss_url', true );
-				$json_gss = 'https://spreadsheets.google.com/feeds/list'.substr($gss_url, 38) . '1/public/basic?alt=json';
+				$googleId = substr($gss_url, 38);
+				$length = strlen($googleId);
+				$lastChar = substr($googleId, $length-1);
+				if ($lastChar == '/'){
+					$googleId;
+				}else{
+					$googleId = $googleId . '/';
+				}
+
+
+				$json_gss = 'https://spreadsheets.google.com/feeds/list'. $googleId . '1/public/basic?alt=json';
 				// Check if the custom field has a value.				
 				
     			
