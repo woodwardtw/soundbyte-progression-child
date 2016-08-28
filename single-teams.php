@@ -72,43 +72,70 @@ get_header(); ?>
 				}
 
 				$stu_id = get_post_meta( get_the_ID(), 'stu_id', true );
-				// Check if the custom field has a value.				
+				// Check if the custom field has a value.		
+
+				?>
+
+				<?php		
+
+				//$paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
+			    $the_query['paged'] = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
 				$the_query = new WP_Query( array( 
+					'posts_per_page' => -1,      //for testing purposes
+					'post_type' => 'post',
+					'paged' => $paged,
 					'meta_query' => array(
 					        array(
 					            'key' => 'stu_id',
-					            'value' => $teamMembers,
+					            'value' => $teamMembers, // ########################################look at this
 					            'compare' => 'IN'
 					        ),
 					    )
 					)
 				  );
 
+				$temp_query = $wp_query;
+				$wp_query   = NULL;
+				$wp_query   = $the_query;
+
+
+  
+
 				// The Loop				
 				if ( $the_query->have_posts() ) :				
-				   echo '<div class="personal-full">';
-				while ( $the_query->have_posts() ) : $the_query->the_post();
-				  $post_id = $post->ID;
-				  //image previews across top 
-				   echo '<div class="personal-full-item"><a href="' . get_permalink() . '">';
-				   echo get_the_post_thumbnail($post_id,'full', array( 'class' => 'aligncenter personal-big' ));
-				   echo '</a><h3><a href="' . get_permalink() . '">';
-        		   echo get_the_title();
-        		   echo '</a></h3>';
-        		   echo '<div class="meta">' . get_the_date() . '</div>';
-				   $content = apply_filters( 'the_content', get_the_content() );
-				   echo $content . '</div>';
+				   echo '<div class="team-content"><div class="masonry">';
+					while ( $the_query->have_posts() ) : $the_query->the_post();
+					  $post_id = $post->ID;
+					  //image previews across top 
+					   echo '<div class="item"><a href="' . get_permalink() . '">';
+					   echo get_the_post_thumbnail($post_id,'medium', array( 'class' => 'aligncenter personal-big' ));
+					   echo '</a><h3><a href="' . get_permalink() . '">';
+	        		   echo get_the_title();
+	        		   echo '</a></h3>';
+	        		   echo '<div class="meta">' . get_the_date() . '</div>';
+					   
+					   echo the_excerpt() . '</div>';
+					endwhile;
 
-				endwhile;
-				   echo '</div>';   
+				    echo '</div>';
 				endif;
 				// Reset Post Data
 				wp_reset_postdata();
 			}
+			// Custom query loop pagination
+
+			echo '<div class="nav"><div class="previous">' . previous_posts_link( 'Older Posts') . '</div>';
+			echo '<div class="nav"><div class="previous">' . next_posts_link( 'Newer Posts', $the_query->max_num_pages ) . '</div>';
+			echo '</div>';
+
+			// Reset main query object
+			$wp_query = NULL;
+		    $wp_query = $temp_query;
 				?>
 			<?php endwhile; // end of the loop. ?>
-
+			 
+			
 			<?php if( get_option( 'page_for_posts' ) ) : $cover_page = get_page( get_option( 'page_for_posts' ) ); ?>
 			<?php if(get_post_meta($cover_page->ID, 'progression_page_sidebar', true) == 'right-sidebar' ) : ?></div><!-- close #main-container-pro --><?php get_sidebar(); ?><?php endif; ?>
 			<?php if(get_post_meta($cover_page->ID, 'progression_page_sidebar', true) == 'left-sidebar' ) : ?></div><!-- close #main-container-pro --><?php get_sidebar(); ?><?php endif; ?>
@@ -117,4 +144,5 @@ get_header(); ?>
 		<div class="clearfix-progression"></div>
 		</div><!-- close .width-container-pro -->
 	</div><!-- #content-pro -->
+	
 <?php get_footer(); ?>
