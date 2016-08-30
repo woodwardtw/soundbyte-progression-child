@@ -170,7 +170,33 @@ function cf_search_distinct( $where ) {
 }
 add_filter( 'posts_distinct', 'cf_search_distinct' );
 
+//EXCERPT STUFF
+
 function team_excerpt_length( $length ) {
     return 150;
 }
 add_filter( 'excerpt_length', 'team_excerpt_length', 999 );
+
+function wpdocs_excerpt_more( $more ) {
+    return ' . . .<br> <a class="button" href="'.get_the_permalink().'" rel="nofollow">Read More</a>';
+}
+add_filter( 'excerpt_more', 'wpdocs_excerpt_more' );
+
+/**
+
+HIDE Posts from ppl who aren't the author or greater
+**/
+
+function posts_for_current_author($query) {
+	global $pagenow;
+
+	if( 'edit.php' != $pagenow || !$query->is_admin )
+	    return $query;
+
+	if( !current_user_can( 'manage_options' ) ) {
+		global $user_ID;
+		$query->set('author', $user_ID );
+	}
+	return $query;
+}
+add_filter('pre_get_posts', 'posts_for_current_author');

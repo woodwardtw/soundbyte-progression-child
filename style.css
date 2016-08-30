@@ -76,6 +76,14 @@
 
 }
 
+/* -------------------- Post -------------------- */
+
+.single-post #soundbyte-page-title {
+	background-size: contain !important;
+	background-repeat: no-repeat !important;
+}
+
+
 /* -------------------- Individual/Personal Page -------------------- */
 
 .personal-images {
@@ -114,6 +122,12 @@
     font-size: .9em;
 }
 
+.search-field {
+	display: inline-block;
+	float: right;
+	margin-right: -200px;
+}
+
 /* -------------------- Individual/Personal Page -------------------- */
 
 .warning {
@@ -147,6 +161,10 @@
     padding: 15px 10px 10px 10px;
 }
 
+.item .button {
+	border-radius: 0px !important;
+	margin-top: 10px !important;	
+}
 
 /* -------------------- BIG LAYOUT -------------------- */
 
@@ -233,6 +251,10 @@ header#masthead-progression #logo {
     column-gap: 1em;
 }
 
+.search-form {
+	margin-right: 0px;
+}
+
 }
 
 /* -------------------- small LAYOUT -------------------- */
@@ -278,6 +300,10 @@ header#masthead-progression #logo {
     -moz-column-gap: 1em;
     -webkit-column-gap: 1em;
     column-gap: 1em;
+}
+
+.search-form {
+	display: none;
 }
 
 }

@@ -82,7 +82,7 @@ get_header(); ?>
 			    $the_query['paged'] = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
 				$the_query = new WP_Query( array( 
-					'posts_per_page' => -1,      //for testing purposes
+					'posts_per_page' => 1,      //for testing purposes
 					'post_type' => 'post',
 					'paged' => $paged,
 					'meta_query' => array(
@@ -126,6 +126,7 @@ get_header(); ?>
 			// Custom query loop pagination
 
 			echo '<div class="nav"><div class="previous">' . previous_posts_link( 'Older Posts') . '</div>';
+			echo  previous_post_link( ( 'Older Entry &gt;'), false, '' );
 			echo '<div class="nav"><div class="previous">' . next_posts_link( 'Newer Posts', $the_query->max_num_pages ) . '</div>';
 			echo '</div>';
 
