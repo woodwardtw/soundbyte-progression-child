@@ -126,7 +126,7 @@ get_header(); ?>
 			// Custom query loop pagination
 
 			echo '<div class="nav"><div class="previous">' . previous_posts_link( 'Older Posts') . '</div>';
-			echo  previous_post_link( ( 'Older Entry &gt;'), false, '' );
+			echo  previous_post_link( '%link', __( 'Older Entry &gt;', 'sometextdomain' ), false, '' );
 			echo '<div class="nav"><div class="previous">' . next_posts_link( 'Newer Posts', $the_query->max_num_pages ) . '</div>';
 			echo '</div>';
 

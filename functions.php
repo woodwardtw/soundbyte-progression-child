@@ -10,25 +10,25 @@ function custom_post_type_personal() {
 
 // Set UI labels for Custom Post Type
 	$labels = array(
-		'name'                => _x( 'Personal', 'Post Type General Name', 'anth' ),
-		'singular_name'       => _x( 'Personal', 'Post Type Singular Name', 'anth' ),
-		'menu_name'           => __( 'Personals', 'anth' ),
-		'all_items'           => __( 'All Personals', 'blackout' ),
-		'view_item'           => __( 'View Personal', 'blackout' ),
-		'add_new_item'        => __( 'Add New Personal', 'blackout' ),
+		'name'                => _x( 'Your Portfolio', 'Post Type General Name', 'anth' ),
+		'singular_name'       => _x( 'Your Portfolio', 'Post Type Singular Name', 'anth' ),
+		'menu_name'           => __( 'Your Portfolio', 'anth' ),
+		'all_items'           => __( 'All Portfolios', 'blackout' ),
+		'view_item'           => __( 'View Portfolio', 'blackout' ),
+		'add_new_item'        => __( 'Add New Portfolio', 'blackout' ),
 		'add_new'             => __( 'Add New', 'blackout' ),
-		'edit_item'           => __( 'Edit Personal', 'blackout' ),
-		'update_item'         => __( 'Update Personal', 'blackout' ),
-		'search_items'        => __( 'Search Personal', 'blackout' ),
-		'not_found'           => __( 'Personal Not Found', 'blackout' ),
+		'edit_item'           => __( 'Edit Portfolio', 'blackout' ),
+		'update_item'         => __( 'Update Portfolio', 'blackout' ),
+		'search_items'        => __( 'Search Portfolio', 'blackout' ),
+		'not_found'           => __( 'Portfolio Not Found', 'blackout' ),
 		'not_found_in_trash'  => __( 'Not found in Trash', 'blackout' ),
 	);
 	
 // Set other options for Custom Post Type
 	
 	$args = array(
-		'label'               => __( 'Personals', 'blackout' ),
-		'description'         => __( 'Personal info', 'blackout' ),
+		'label'               => __( 'Portfolio', 'blackout' ),
+		'description'         => __( 'Portfolio info', 'blackout' ),
 		'labels'              => $labels,
 		// Features this CPT supports in Post Editor
 		'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'revisions', 'custom-fields', 'page-attributes', ),
@@ -49,7 +49,7 @@ function custom_post_type_personal() {
 		'has_archive'         => true,
 		'exclude_from_search' => false,
 		'publicly_queryable'  => true,
-		'capability_type'     => 'page',
+		'capability_type'     => 'post',
 		'show_in_rest'       => true,
   		'rest_base'          => 'personal-api',
   		'rest_controller_class' => 'WP_REST_Posts_Controller',
@@ -200,3 +200,57 @@ function posts_for_current_author($query) {
 	return $query;
 }
 add_filter('pre_get_posts', 'posts_for_current_author');
+
+/** HIDE MORE ADMIN STUFF from AUTHORS **/
+
+/* Clean up the admin sidebar navigation *************************************************/
+function remove_admin_menu_items() {
+if( current_user_can( 'manage_options' ) ) { }
+	else {	
+  $remove_menu_items = array(__('Media'),__('Tools'),__('Episodes'),__('Contact'), __('Comments'));
+  global $menu;
+  end ($menu);
+  while (prev($menu)){
+    $item = explode(' ',$menu[key($menu)][0]);
+    if(in_array($item[0] != NULL?$item[0]:"" , $remove_menu_items)){
+      unset($menu[key($menu)]);
+    }
+  }
+}
+}
+add_action('admin_menu', 'remove_admin_menu_items');
+
+function remove_menus(){
+if( current_user_can( 'manage_options' ) ) { }
+	else {		
+  
+  remove_menu_page( 'index.php' );                  //Dashboard
+  remove_menu_page( 'jetpack' );                    //Jetpack* 
+  remove_menu_page( 'options-general.php' );        //Settings
+  remove_menu_page( 'vc-welcome' );        //Settings
+  remove_menu_page( 'profile' );        //profile
+  //remove_menu_page('profile.php');
+
+}
+}
+add_action( 'admin_menu', 'remove_menus', 999 );
+
+
+//redirects from dashboard to edit post list 
+function remove_the_dashboard () {
+if (current_user_can('level_10')) {
+	return;
+	}else {
+	global $menu, $submenu, $user_ID;
+	$the_user = new WP_User($user_ID);
+	reset($menu); $page = key($menu);
+	while ((__('Dashboard') != $menu[$page][0]) && next($menu))
+	$page = key($menu);
+	if (__('Dashboard') == $menu[$page][0]) unset($menu[$page]);
+	reset($menu); $page = key($menu);
+	while (!$the_user->has_cap($menu[$page][1]) && next($menu))
+	$page = key($menu);
+	if (preg_match('#wp-admin/?(index.php)?$#',$_SERVER['REQUEST_URI']) && ('index.php' != $menu[$page][2]))
+	wp_redirect(get_option('siteurl') . '/wp-admin/edit.php');}
+}
+add_action('admin_menu', 'remove_the_dashboard');
