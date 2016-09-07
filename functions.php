@@ -114,6 +114,13 @@ function custom_post_type_team() {
 }	
 add_action( 'init', 'custom_post_type_team', 0 );
 
+/**  set custom field stu_id if empty **/
+
+function setField(){
+
+}
+
+
 /**
  * Extend WordPress search to include custom fields
  *
@@ -254,3 +261,22 @@ if (current_user_can('level_10')) {
 	wp_redirect(get_option('siteurl') . '/wp-admin/edit.php');}
 }
 add_action('admin_menu', 'remove_the_dashboard');
+
+//adds author email to user_id meta field on save
+
+function add_user_id_metafield( $post_id ) {
+        $metaEmail = get_post_meta( get_the_ID(), 'stu_id', true );
+        // Check if the custom field has a value.
+        if (isset($post->post_status) && 'auto-draft' == $post->post_status) {
+    return;
+  }
+        if ( ! empty( $metaEmail) ) {
+        } else {
+        	global $current_user;
+			wp_get_current_user(); 
+            $user_email = $current_user->user_email;           
+            update_post_meta(get_the_ID($post_id),'stu_id', $user_email);
+    
+         }
+}
+add_action( 'save_post', 'add_user_id_metafield' );
