@@ -6,6 +6,55 @@
  */
 
 get_header(); ?>
+<?php 
+wp_reset_postdata();
+
+$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
+
+ $aargs = array(
+			        'posts_per_page' => 2,      //for testing purposes
+					'post_type' => 'post',
+    				'paged' => $paged,
+					
+					); 
+// the query
+$a_query = new WP_Query( $aargs ); 
+$max_pages = $a_query->max_num_pages;
+?>
+ 
+<?php if ( $a_query->have_posts() ) : ?>
+ 
+    <!-- pagination here -->
+ 
+    <!-- the loop -->
+    <?php while ( $a_query->have_posts() ) : $a_query->the_post(); ?>
+        <h2><?php the_title(); ?></h2>
+       
+    <?php endwhile; ?>
+    <!-- end of the loop -->
+ 
+    <!-- pagination here -->
+    <nav>
+				    <ul>
+				        <li><?php previous_posts_link( '&laquo; PREV', $max_pages);
+				        var_dump($a_query->max_num_pages);
+				        var_dump(previous_posts_link( '&laquo; PREV', $max_pages));
+				        previous_posts_link( '&laquo; PREV');
+				        ?></li> 
+				        <li><?php next_posts_link( 'NEXT &raquo;', $max_pages);
+				        var_dump($a_query->max_num_pages);
+				        var_dump(next_posts_link( 'NEXT &raquo;', $max_pages));
+				         ?>b</li>
+				        <?php next_posts_link( 'Older Entries »'); ?>
+				    </ul>
+				</nav>
+ 
+    <?php wp_reset_postdata(); ?>
+ 
+<?php else : ?>
+    <p><?php _e( 'Sorry, no posts matched your criteria.' ); ?></p>
+<?php endif; ?>
+
 
 	<?php if( get_option( 'page_for_posts' ) ) : $cover_page = get_page( get_option( 'page_for_posts' ) ); ?>
 
@@ -74,17 +123,17 @@ get_header(); ?>
 				$stu_id = get_post_meta( get_the_ID(), 'stu_id', true );
 				// Check if the custom field has a value.		
 
-				?>
+				?>		
 
-				<?php		
 
-				//$paged = ( get_query_var('paged') ) ? get_query_var('paged') : 1;
-			    $the_query['paged'] = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
-
-				$the_query = new WP_Query( array( 
-					'posts_per_page' => 1,      //for testing purposes
+				<?php	
+				wp_reset_postdata();
+	
+				$paged = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
+			    $args = array(
+			        'posts_per_page' => 3,      //for testing purposes
 					'post_type' => 'post',
-					'paged' => $paged,
+    				'paged' => $paged,
 					'meta_query' => array(
 					        array(
 					            'key' => 'stu_id',
@@ -92,15 +141,10 @@ get_header(); ?>
 					            'compare' => 'IN'
 					        ),
 					    )
-					)
-				  );
+					); 
 
-				$temp_query = $wp_query;
-				$wp_query   = NULL;
-				$wp_query   = $the_query;
-
-
-  
+				$the_query = new WP_Query($args);
+				
 
 				// The Loop				
 				if ( $the_query->have_posts() ) :				
@@ -116,26 +160,34 @@ get_header(); ?>
 	        		   echo '<div class="meta">' . get_the_date() . '</div>';
 					   
 					   echo the_excerpt() . '</div>';
+					   previous_posts_link( '&laquo; PREV', $the_query->max_num_pages);
+					   					   previous_posts_link( '&laquo; PREV');
+				       next_posts_link( 'NEXT &raquo;', $the_query->max_num_pages);
+
 					endwhile;
 
 				    echo '</div>';
+
+				    
 				endif;
+
 				// Reset Post Data
-				wp_reset_postdata();
 			}
-			// Custom query loop pagination
-
-			echo '<div class="nav"><div class="previous">' . previous_posts_link( 'Older Posts') . '</div>';
-			echo  previous_post_link( '%link', __( 'Older Entry &gt;', 'sometextdomain' ), false, '' );
-			echo '<div class="nav"><div class="previous">' . next_posts_link( 'Newer Posts', $the_query->max_num_pages ) . '</div>';
-			echo '</div>';
-
-			// Reset main query object
-			$wp_query = NULL;
-		    $wp_query = $temp_query;
+			// Custom query loop pagination						
+			
 				?>
+				<nav>
+				    <ul>
+				        <li><?php previous_posts_link( '&laquo; PREV', $the_query->max_num_pages) ?></li> 
+				        <li><?php next_posts_link( 'NEXT &raquo;', $the_query->max_num_pages) ?></li>
+				        <?php next_posts_link( 'Older Entries »', 0 ); ?>
+				    </ul>
+				</nav>
+
+
 			<?php endwhile; // end of the loop. ?>
-			 
+			
+
 			
 			<?php if( get_option( 'page_for_posts' ) ) : $cover_page = get_page( get_option( 'page_for_posts' ) ); ?>
 			<?php if(get_post_meta($cover_page->ID, 'progression_page_sidebar', true) == 'right-sidebar' ) : ?></div><!-- close #main-container-pro --><?php get_sidebar(); ?><?php endif; ?>
@@ -145,5 +197,6 @@ get_header(); ?>
 		<div class="clearfix-progression"></div>
 		</div><!-- close .width-container-pro -->
 	</div><!-- #content-pro -->
+
 	
 <?php get_footer(); ?>
