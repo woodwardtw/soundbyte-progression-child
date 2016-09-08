@@ -126,9 +126,9 @@ get_header(); ?>
 			}
 			// Custom query loop pagination
 			echo '<div class="navigation"><div class="back">';
-			echo previous_posts_link( '<< Back', $the_query->max_num_pages ) . '</div>';
-			echo '<div class="next">' . next_posts_link( 'Next >>', $the_query->max_num_pages ) . '</div>';
-			echo '</div>';
+			echo previous_posts_link( '<< Back', $the_query->max_num_pages ) . '</div><div class="next">';
+			echo next_posts_link( 'Next >>', $the_query->max_num_pages );
+			echo '</div></div>';
 
 
 			

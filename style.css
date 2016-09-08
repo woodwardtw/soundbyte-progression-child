@@ -166,6 +166,29 @@
 	margin-top: 10px !important;	
 }
 
+.navigation {
+	display: block;
+	width: 80%;
+	margin: auto;
+	font-size: 1.5em;
+}
+
+.back, .next {
+	padding: 5px 7px;
+	border: 1px solid #000;
+	width: 180px;
+	display: inline-block;
+	text-align: center;
+}
+
+.back {
+	float: left;
+}
+
+.next {
+	float:right;
+}
+
 /* -------------------- BIG LAYOUT -------------------- */
 
 /* -------------------- SOUNDCLOUD LAYOUT -------------------- */
