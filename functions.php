@@ -282,7 +282,7 @@ function add_user_id_metafield( $post_id ) {
 add_action( 'save_post', 'add_user_id_metafield' );
 
 //makes custom post type pagination work 
-add_filter( 'redirect_canonical','custom_disable_redirect_canonical_teams' ); 
+add_filter( 'redirect_canonical','custom_disable_redirect_canonical' ); 
 function custom_disable_redirect_canonical( $redirect_url ){
     if ( is_singular('teams') ) $redirect_url = false;
     return $redirect_url;
