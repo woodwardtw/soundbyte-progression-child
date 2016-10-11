@@ -42,18 +42,11 @@ get_header(); ?>
 				<!-- ######################  stuff to show the student or course content ######################### -->
 				</div>
 				<?php
-				$gss_url = get_post_meta( get_the_ID(), 'gss_url', true );
-				$googleId = substr($gss_url, 38);
-				$length = strlen($googleId);
-				$lastChar = substr($googleId, $length-1);
-				if ($lastChar == '/'){
-					$googleId;
-				}else{
-					$googleId = $googleId . '/';
-				}
+				$gss_url = get_post_meta( get_the_ID(), 'gss_url', true ); //get custom field value 
+				$regGoog = preg_match("/\/[A-Za-z]\/(.*)\//", $gss_url, $match);	//regex match to get doc ID			
+				$googleId = strval($match[1]);
 
-
-				$json_gss = 'https://spreadsheets.google.com/feeds/list'. $googleId . '1/public/basic?alt=json';
+				$json_gss = 'https://spreadsheets.google.com/feeds/list/'. $googleId . '/1/public/basic?alt=json';
 				// Check if the custom field has a value.				
 				
     			

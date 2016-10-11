@@ -281,9 +281,94 @@ function add_user_id_metafield( $post_id ) {
 }
 add_action( 'save_post', 'add_user_id_metafield' );
 
-//makes custom post type pagination work 
+//make pagination work for teams
+
 add_filter( 'redirect_canonical','custom_disable_redirect_canonical' ); 
 function custom_disable_redirect_canonical( $redirect_url ){
     if ( is_singular('teams') ) $redirect_url = false;
     return $redirect_url;
+}
+
+
+//set posts to single column display from http://wordpress.stackexchange.com/questions/4552/how-do-i-force-a-single-column-layout-in-screen-layout
+function so_screen_layout_columns( $columns ) {
+	 if(!current_user_can('administrator')) {
+	    $columns['post'] = 1;
+	    return $columns;
+	}
+}
+add_filter( 'screen_layout_columns', 'so_screen_layout_columns' );
+
+function so_screen_layout_post() {
+	 if(!current_user_can('administrator')) {
+
+    	return 1;
+    }	
+}
+add_filter( 'get_user_option_screen_layout_post', 'so_screen_layout_post' );
+
+
+//re-title some of the meta boxes
+
+add_action('add_meta_boxes', function() {
+	 if(!current_user_can('administrator')) {
+	
+	  remove_meta_box('post-settings', 'post', 'normal'); //seems to work up here but not below 
+
+	  add_meta_box('postimagediv', __('Featured Image (Sets header image)'), 'post_thumbnail_meta_box', 'post', 'advanced', 'high');
+	  add_meta_box('categorydiv', __('What challenge is this?'), 'post_categories_meta_box', 'post', 'advanced', 'high');
+	 
+	}
+});
+
+
+if (is_admin()) :
+function remove_post_meta_boxes() {
+ if(!current_user_can('administrator')) {
+  remove_meta_box('tagsdiv-post_tag', 'post', 'normal');
+  remove_meta_box('categorydiv', 'post', 'normal');
+  remove_meta_box('postimagediv', 'post', 'normal');
+  remove_meta_box('authordiv', 'post', 'normal');
+  remove_meta_box('postexcerpt', 'post', 'normal');
+  remove_meta_box('trackbacksdiv', 'post', 'normal');
+  remove_meta_box('commentstatusdiv', 'post', 'normal');
+  remove_meta_box('postcustom', 'post', 'normal');
+  remove_meta_box('commentstatusdiv', 'post', 'normal');
+  remove_meta_box('commentsdiv', 'post', 'normal');
+  remove_meta_box('revisionsdiv', 'post', 'normal');
+  remove_meta_box('authordiv', 'post', 'normal');
+  remove_meta_box('slugdiv', 'post', 'normal');
+ }
+}
+add_action( 'admin_menu', 'remove_post_meta_boxes' );
+endif;
+
+
+//add text to add media button
+function rename_media_button( $translation, $text ) {
+    if( 'Add Media' === $text ) {
+        return 'Add Media (use this to add photos to your text below)';
+    }
+    return $translation;
+}
+add_filter( 'gettext', 'rename_media_button', 10, 2 );
+
+//hide additional post options from https://css-tricks.com/snippets/wordpress/apply-custom-css-to-admin-area/
+
+add_action('admin_head', 'hide_extra_pub_options');
+
+function hide_extra_pub_options() {
+	 if(!current_user_can('administrator')) {
+
+	  echo '<style>
+	    
+	    #misc-publishing-actions {display:none;}
+	    #minor-publishing {padding: 10px;}
+	    .postbox {
+	    	width: 30%;
+	    	float:left;
+	    	margin: 15px;
+	    }
+	  </style>';
+}
 }
