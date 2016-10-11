@@ -353,7 +353,7 @@ function rename_media_button( $translation, $text ) {
 }
 add_filter( 'gettext', 'rename_media_button', 10, 2 );
 
-//hide additional post options from https://css-tricks.com/snippets/wordpress/apply-custom-css-to-admin-area/
+//hide additional post options from https://css-tricks.com/snippets/wordpress/apply-custom-css-to-admin-area/ including website on user profile
 
 add_action('admin_head', 'hide_extra_pub_options');
 
@@ -369,6 +369,21 @@ function hide_extra_pub_options() {
 	    	float:left;
 	    	margin: 15px;
 	    }
+	    tr.user-url-wrap{ display: none; }
+	    tr.user-capabilities-wrap, tr.user-rich-editing-wrap, tr.user-comment-shortcuts-wrap, tr.show-admin-bar, tr.user-admin-color-wrap, tr.user-description-wrap{display: none;}
+	    h2:nth-of-type(1), h2:nth-of-type(6) {display: none;}
+
 	  </style>';
 }
 }
+
+
+//cleaning up profile page
+function modify_user_contact_methods( $user_contact ) {
+
+	// Remove user contact methods
+	unset( $user_contact['aim']    );
+	unset( $user_contact['jabber'] );
+	return $user_contact;
+}
+add_filter( 'user_contactmethods', 'modify_user_contact_methods' );
