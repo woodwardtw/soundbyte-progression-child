@@ -4,7 +4,18 @@ add_action( 'wp_enqueue_scripts', 'enqueue_parent_styles' );
 
 function enqueue_parent_styles() {
    wp_enqueue_style( 'parent-style', get_template_directory_uri().'/style.css' );
-}
+ //  wp_enqueue_style('fontawesome', 'https://use.fontawesome.com/4fc2680c38.js', '', '4.7.0', 'all'); //font awesome css
+   wp_enqueue_script('fontawesome', 'https://use.fontawesome.com/4fc2680c38.js', null, '4.7', false);
+};
+
+add_action( 'admin_enqueue_scripts', 'enqueue_toolbar_styles' );
+
+function enqueue_toolbar_styles() {
+   wp_enqueue_style('fontawesome', 'https://use.fontawesome.com/4fc2680c38.js', '', '4.7.0', 'all'); //font awesome css
+   wp_enqueue_script('fontawesome', 'https://use.fontawesome.com/4fc2680c38.js', null, '4.7', false);
+
+};
+
 
 function custom_post_type_personal() {
 
@@ -53,6 +64,8 @@ function custom_post_type_personal() {
 		'show_in_rest'       => true,
   		'rest_base'          => 'personal-api',
   		'rest_controller_class' => 'WP_REST_Posts_Controller',
+  		'menu_icon' => 'dashicons-admin-users',
+
 	);
 // Registering your Custom Post Type
 	register_post_type( 'Personals', $args );
@@ -107,6 +120,7 @@ function custom_post_type_team() {
 		'show_in_rest'       => true,
   		'rest_base'          => 'personal-api',
   		'rest_controller_class' => 'WP_REST_Posts_Controller',
+  		'menu_icon' => 'dashicons-groups',
 	);
 // Registering your Custom Post Type
 	register_post_type( 'Teams', $args );
@@ -317,6 +331,7 @@ add_action('add_meta_boxes', function() {
 
 	  add_meta_box('postimagediv', __('Featured Image (Sets header image)'), 'post_thumbnail_meta_box', 'post', 'advanced', 'high');
 	  add_meta_box('categorydiv', __('What challenge is this?'), 'post_categories_meta_box', 'post', 'advanced', 'high');
+	  add_meta_box('submitdiv', __('Make it public'), 'post_submit_meta_box', 'post', 'advanced', 'low');
 	 
 	}
 });
@@ -327,6 +342,7 @@ function remove_post_meta_boxes() {
  if(!current_user_can('administrator')) {
   remove_meta_box('tagsdiv-post_tag', 'post', 'normal');
   remove_meta_box('categorydiv', 'post', 'normal');
+  remove_meta_box('submitdiv', 'post', 'normal');
   remove_meta_box('postimagediv', 'post', 'normal');
   remove_meta_box('authordiv', 'post', 'normal');
   remove_meta_box('postexcerpt', 'post', 'normal');
@@ -374,7 +390,7 @@ function hide_extra_pub_options() {
 	    h2:nth-of-type(1), h2:nth-of-type(6) {display: none;}
 
 	  </style>';
-}
+    }
 }
 
 
@@ -387,3 +403,94 @@ function modify_user_contact_methods( $user_contact ) {
 	return $user_contact;
 }
 add_filter( 'user_contactmethods', 'modify_user_contact_methods' );
+
+
+
+//CUSTOM TOOL BAR STUFF
+
+
+function my_admin_bar_render() {
+    global $wp_admin_bar;
+    $wp_admin_bar->remove_menu('comments');
+    $wp_admin_bar->remove_menu('wp-logo');
+    $wp_admin_bar->remove_menu('site-name');
+    $wp_admin_bar->remove_menu('customize');
+    $wp_admin_bar->remove_menu('new-content');
+
+}
+add_action( 'wp_before_admin_bar_render', 'my_admin_bar_render' );
+
+
+// Add Custom Toolbar Menu
+// Add Toolbar Menus
+
+//FAVS
+
+add_action( 'admin_bar_menu', 'toolbar_link_to_fav', 959 );
+
+function toolbar_link_to_fav( $wp_admin_bar ) {
+	$args = array(
+		'id'    => 'my_fav',
+		'title' => '<i class="fa fa-heart fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'href'  => 'http://192.168.33.10/wordpress/anth/favs/',
+		'meta'  => array( 'class' => 'my-toolbar-icon' )
+	);
+	$wp_admin_bar->add_node( $args );
+}
+
+
+
+
+add_action( 'admin_bar_menu', 'toolbar_link_to_star', 959 );
+
+function toolbar_link_to_star( $wp_admin_bar ) {
+	$args = array(
+		'id'    => 'my_star',
+		'title' => '<i class="fa fa-star fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'href'  => 'http://mysite.com/my-page/',
+		'meta'  => array( 'class' => 'my-toolbar-icon' )
+	);
+	$wp_admin_bar->add_node( $args );
+}
+
+add_action( 'admin_bar_menu', 'toolbar_link_to_recent', 959 );
+
+function toolbar_link_to_recent( $wp_admin_bar ) {
+	$args = array(
+		'id'    => 'my_recent',
+		'title' => '<i class="fa fa-clock-o fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'href'  => 'http://mysite.com/my-page/',
+		'meta'  => array( 'class' => 'my-toolbar-icon' )
+	);
+	$wp_admin_bar->add_node( $args );
+}
+
+add_action( 'admin_bar_menu', 'toolbar_link_to_challenge', 999 );
+
+function toolbar_link_to_challenge( $wp_admin_bar ) {
+	$args = array(
+		'id'    => 'my_challenge',
+		'title' => '<i class="fa fa-grav fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'href'  => 'http://mysite.com/my-page/',
+		'meta'  => array( 'class' => 'my-toolbar-icon' )
+	);
+	$wp_admin_bar->add_node( $args );
+}
+
+
+
+
+function show_custom_admin_menu() {
+    echo '
+    <style type="text/css">
+        .my-toolbar-icon {
+            display: block!important;  
+            margin: 3px 8px 0 8px !important;          
+        }
+
+    </style>';
+}
+// on backend area
+add_action( 'admin_head', 'show_custom_admin_menu' );
+// on frontend area
+add_action( 'wp_head', 'show_custom_admin_menu' );

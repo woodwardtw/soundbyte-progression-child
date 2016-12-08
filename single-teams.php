@@ -44,17 +44,18 @@ get_header(); ?>
 				<?php
 				$gss_url = get_post_meta( get_the_ID(), 'gss_url', true ); //get custom field value 
 				$regGoog = preg_match("/\/[A-Za-z]\/(.*)\//", $gss_url, $match);	//regex match to get doc ID			
+				
+				if ($regGoog){
 				$googleId = strval($match[1]);
-
 				$json_gss = 'https://spreadsheets.google.com/feeds/list/'. $googleId . '/1/public/basic?alt=json';
+					}
 				// Check if the custom field has a value.				
 				
-    			
 				$json = @file_get_contents($json_gss);
 
 				if ( $json === false )
 					{
-					   echo '<div class="warning">Looks like your Google spreadsheet might not be public.<br> Try going back to the spreadsheet and choosing <em>File>Publish to the web.</em></div>';
+					   echo '<div class="warning">Looks like your Google spreadsheet might not be public or maybe the formatting is incorrect.<br> Try going back to the spreadsheet and choosing <em>File>Publish to the web.</em></div>';
 					} else {
     								
 				$data = json_decode($json, TRUE);
@@ -66,10 +67,12 @@ get_header(); ?>
 
 				$stu_id = get_post_meta( get_the_ID(), 'stu_id', true );
 				// Check if the custom field has a value.		
-
+			    
 				?>
 
-				<?php		
+				<?php	
+
+				if ($json){	
 
 			    $paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
@@ -77,7 +80,7 @@ get_header(); ?>
 					'posts_per_page' => 25, 
 					'orderby' => 'date',     
 					'post_type' => 'post',
-					'nopaging' => false,                    //(bool) - show all posts or use pagination. Default value is 'false', use paging.
+					'nopaging' => false,   //(bool) - show all posts or use pagination. Default value is 'false', use paging.
     				'paged' => $paged,
 					'meta_query' => array(
 					        array(
@@ -118,10 +121,12 @@ get_header(); ?>
 				wp_reset_postdata();
 			}
 			// Custom query loop pagination
-			echo '<div class="navigation"><div class="back">';
-			echo previous_posts_link( '<< Back', $the_query->max_num_pages ) . '</div><div class="next">';
-			echo next_posts_link( 'Next >>', $the_query->max_num_pages );
-			echo '</div></div>';
+			echo '<div class="navigation">';
+			if (previous_posts_link()){
+				echo previous_posts_link( '<div class="back"><< Back', $the_query->max_num_pages ) . '</div>';
+			}
+			echo next_posts_link( '<div class="next">Next >>', $the_query->max_num_pages .'</div>' );
+			echo '</div>';
 
 
 			
@@ -129,6 +134,7 @@ get_header(); ?>
 			// Reset main query object
 			$wp_query = NULL;
 		    $wp_query = $temp_query;
+		}
 				?>
 			<?php endwhile; // end of the loop. ?>
 			 
