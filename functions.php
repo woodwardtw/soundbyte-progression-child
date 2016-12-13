@@ -326,7 +326,6 @@ add_filter( 'get_user_option_screen_layout_post', 'so_screen_layout_post' );
 
 add_action('add_meta_boxes', function() {
 	 if(!current_user_can('administrator')) {
-	  remove_meta_box('simplefavorites', 'post', 'normal');		
 	  remove_meta_box('post-settings', 'post', 'normal'); //seems to work up here but not below 
 	  add_meta_box('postimagediv', __('Featured Image (Sets header image)'), 'post_thumbnail_meta_box', 'post', 'advanced', 'high');
 	  add_meta_box('categorydiv', __('What challenge is this?'), 'post_categories_meta_box', 'post', 'advanced', 'high');
@@ -339,6 +338,7 @@ add_action('add_meta_boxes', function() {
 if (is_admin()) :
 function remove_post_meta_boxes() {
  if(!current_user_can('administrator')) {
+  remove_meta_box('simplefavorites', 'post', 'low');		
   remove_meta_box('tagsdiv-post_tag', 'post', 'normal');
   remove_meta_box('categorydiv', 'post', 'normal');
   remove_meta_box('submitdiv', 'post', 'normal');
@@ -406,7 +406,7 @@ add_filter( 'user_contactmethods', 'modify_user_contact_methods' );
 
 // CHANGE POST TO CHALLENGE
 
-function revcon_change_post_object() {
+function anth_change_post_object() {
     global $wp_post_types;
     $labels =$wp_post_types['post']->labels;
     $labels->name = 'Challenge';
@@ -424,7 +424,7 @@ function revcon_change_post_object() {
     $labels->name_admin_bar = 'Challenges';
 }
  
-add_action( 'init', 'revcon_change_post_object' );
+add_action( 'init', 'anth_change_post_object' );
 
 //---------------------------------CUSTOM TOOL BAR STUFF
 
@@ -447,7 +447,7 @@ add_action( 'admin_bar_menu', 'toolbar_link_to_new', 949 );
 function toolbar_link_to_new( $wp_admin_bar ) {
 	$args = array(
 		'id'    => 'my_new',
-		'title' => '<i class="fa fa-plus fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'title' => '<i class="fa fa-plus fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i><div class="full-view-menu">New Challenge</div>',
 		'href'  => '/wp-admin/post-new.php',
 		'meta'  => array( 'class' => 'my-toolbar-icon' )
 	);
@@ -462,13 +462,12 @@ add_action( 'admin_bar_menu', 'toolbar_link_to_fav', 959 );
 function toolbar_link_to_fav( $wp_admin_bar ) {
 	$args = array(
 		'id'    => 'my_fav',
-		'title' => '<i class="fa fa-heart fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'title' => '<i class="fa fa-heart fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i><div class="full-view-menu">Favorites</div>',
 		'href'  => '/favorites/',
 		'meta'  => array( 'class' => 'my-toolbar-icon' )
 	);
 	$wp_admin_bar->add_node( $args );
 }
-
 
 
 //TOOL BAR STAR
@@ -477,7 +476,7 @@ add_action( 'admin_bar_menu', 'toolbar_link_to_star', 969 );
 function toolbar_link_to_star( $wp_admin_bar ) {
 	$args = array(
 		'id'    => 'my_star',
-		'title' => '<i class="fa fa-star fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'title' => '<i class="fa fa-star fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i><div class="full-view-menu">Stars</div>',
 		'href'  => '#',
 		'meta'  => array( 'class' => 'my-toolbar-icon' )
 	);
@@ -490,7 +489,7 @@ add_action( 'admin_bar_menu', 'toolbar_link_to_recent', 979 );
 function toolbar_link_to_recent( $wp_admin_bar ) {
 	$args = array(
 		'id'    => 'my_recent',
-		'title' => '<i class="fa fa-clock-o fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'title' => '<i class="fa fa-clock-o fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i><div class="full-view-menu">Recent</div>',
 		'href'  => '/latest/',
 		'meta'  => array( 'class' => 'my-toolbar-icon' )
 	);
@@ -503,7 +502,7 @@ add_action( 'admin_bar_menu', 'toolbar_link_to_challenge', 989 );
 function toolbar_link_to_challenge( $wp_admin_bar ) {
 	$args = array(
 		'id'    => 'my_challenge',
-		'title' => '<i class="fa fa-grav fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'title' => '<i class="fa fa-grav fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i><div class="full-view-menu">Challenges</div>',
 		'href'  => '#',
 		'meta'  => array( 'class' => 'my-toolbar-icon' )
 	);
@@ -516,10 +515,29 @@ function toolbar_link_to_challenge( $wp_admin_bar ) {
 function show_custom_admin_menu() {
     echo '
     <style type="text/css">
+      i {
+      	display: inline-block;
+      }
+      .full-view-menu {
+      	color: #fff;
+      	display: inline-block;
+      	margin-left: 8px !important;
+      	margin-right: 10px !important;
+      }
+    @media only screen and (min-device-width : 368px) and (max-device-width : 1024px) {
+
+		#wpadminbar {
+		  position: absolute;
+		}
         .my-toolbar-icon {
             display: block!important;  
             margin: 3px 8px 0 8px !important;          
         }
+       .full-view-menu {
+       	display:none;
+       }
+        
+    }
 
     </style>';
 }
