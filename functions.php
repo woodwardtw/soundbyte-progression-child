@@ -432,7 +432,7 @@ function my_admin_bar_render() {
     global $wp_admin_bar;
     $wp_admin_bar->remove_menu('comments');
     $wp_admin_bar->remove_menu('wp-logo');
-    //$wp_admin_bar->remove_menu('site-name');
+    $wp_admin_bar->remove_menu('site-name');
     $wp_admin_bar->remove_menu('customize');
     $wp_admin_bar->remove_menu('new-content');
 
@@ -440,8 +440,20 @@ function my_admin_bar_render() {
 add_action( 'wp_before_admin_bar_render', 'my_admin_bar_render' );
 
 
-//TOOL BAR NEW
+//TOOL BAR HOME
+add_action( 'admin_bar_menu', 'toolbar_link_to_home', 949 );
 
+function toolbar_link_to_home( $wp_admin_bar ) {
+	$args = array(
+		'id'    => 'my_home',
+		'title' => '<i class="fa fa-home fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i><div class="full-view-menu">HOME</div>',
+		'href'  => '/wp-admin/',
+		'meta'  => array( 'class' => 'my-toolbar-icon' )
+	);
+	$wp_admin_bar->add_node( $args );
+}
+
+//TOOL BAR NEW
 add_action( 'admin_bar_menu', 'toolbar_link_to_new', 949 );
 
 function toolbar_link_to_new( $wp_admin_bar ) {
@@ -527,7 +539,7 @@ function show_custom_admin_menu() {
     @media only screen and (min-device-width : 368px) and (max-device-width : 1024px) {
 
 		#wpadminbar {
-		  position: absolute;
+		  position: fixed;
 		}
         .my-toolbar-icon {
             display: block!important;  
