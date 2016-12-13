@@ -326,9 +326,8 @@ add_filter( 'get_user_option_screen_layout_post', 'so_screen_layout_post' );
 
 add_action('add_meta_boxes', function() {
 	 if(!current_user_can('administrator')) {
-	
+	  remove_meta_box('simplefavorites', 'post', 'normal');		
 	  remove_meta_box('post-settings', 'post', 'normal'); //seems to work up here but not below 
-
 	  add_meta_box('postimagediv', __('Featured Image (Sets header image)'), 'post_thumbnail_meta_box', 'post', 'advanced', 'high');
 	  add_meta_box('categorydiv', __('What challenge is this?'), 'post_categories_meta_box', 'post', 'advanced', 'high');
 	  add_meta_box('submitdiv', __('Make it public'), 'post_submit_meta_box', 'post', 'advanced', 'low');
@@ -405,15 +404,35 @@ function modify_user_contact_methods( $user_contact ) {
 add_filter( 'user_contactmethods', 'modify_user_contact_methods' );
 
 
+// CHANGE POST TO CHALLENGE
 
-//CUSTOM TOOL BAR STUFF
+function revcon_change_post_object() {
+    global $wp_post_types;
+    $labels =$wp_post_types['post']->labels;
+    $labels->name = 'Challenge';
+    $labels->singular_name = 'Challenge';
+    $labels->add_new = 'Complete a Challenge';
+    $labels->add_new_item = 'Complete a Challenge';
+    $labels->edit_item = 'Edit Challenge';
+    $labels->new_item = 'Challenge';
+    $labels->view_item = 'View Challenges';
+    $labels->search_items = 'Search Challenges';
+    $labels->not_found = 'No Challenges found';
+    $labels->not_found_in_trash = 'No Challenges found in Trash';
+    $labels->all_items = 'All Challenges';
+    $labels->menu_name = 'Challenges';
+    $labels->name_admin_bar = 'Challenges';
+}
+ 
+add_action( 'init', 'revcon_change_post_object' );
 
+//---------------------------------CUSTOM TOOL BAR STUFF
 
 function my_admin_bar_render() {
     global $wp_admin_bar;
     $wp_admin_bar->remove_menu('comments');
     $wp_admin_bar->remove_menu('wp-logo');
-    $wp_admin_bar->remove_menu('site-name');
+    //$wp_admin_bar->remove_menu('site-name');
     $wp_admin_bar->remove_menu('customize');
     $wp_admin_bar->remove_menu('new-content');
 
@@ -421,10 +440,22 @@ function my_admin_bar_render() {
 add_action( 'wp_before_admin_bar_render', 'my_admin_bar_render' );
 
 
-// Add Custom Toolbar Menu
-// Add Toolbar Menus
+//TOOL BAR NEW
 
-//FAVS
+add_action( 'admin_bar_menu', 'toolbar_link_to_new', 949 );
+
+function toolbar_link_to_new( $wp_admin_bar ) {
+	$args = array(
+		'id'    => 'my_new',
+		'title' => '<i class="fa fa-plus fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
+		'href'  => '/wp-admin/post-new.php',
+		'meta'  => array( 'class' => 'my-toolbar-icon' )
+	);
+	$wp_admin_bar->add_node( $args );
+}
+
+
+//TOOL BAR FAVORITES
 
 add_action( 'admin_bar_menu', 'toolbar_link_to_fav', 959 );
 
@@ -432,7 +463,7 @@ function toolbar_link_to_fav( $wp_admin_bar ) {
 	$args = array(
 		'id'    => 'my_fav',
 		'title' => '<i class="fa fa-heart fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
-		'href'  => 'http://192.168.33.10/wordpress/anth/favs/',
+		'href'  => '/favorites/',
 		'meta'  => array( 'class' => 'my-toolbar-icon' )
 	);
 	$wp_admin_bar->add_node( $args );
@@ -440,38 +471,40 @@ function toolbar_link_to_fav( $wp_admin_bar ) {
 
 
 
-
-add_action( 'admin_bar_menu', 'toolbar_link_to_star', 959 );
+//TOOL BAR STAR
+add_action( 'admin_bar_menu', 'toolbar_link_to_star', 969 );
 
 function toolbar_link_to_star( $wp_admin_bar ) {
 	$args = array(
 		'id'    => 'my_star',
 		'title' => '<i class="fa fa-star fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
-		'href'  => 'http://mysite.com/my-page/',
+		'href'  => '#',
 		'meta'  => array( 'class' => 'my-toolbar-icon' )
 	);
 	$wp_admin_bar->add_node( $args );
 }
 
-add_action( 'admin_bar_menu', 'toolbar_link_to_recent', 959 );
+//TOOL BAR RECENT
+add_action( 'admin_bar_menu', 'toolbar_link_to_recent', 979 );
 
 function toolbar_link_to_recent( $wp_admin_bar ) {
 	$args = array(
 		'id'    => 'my_recent',
 		'title' => '<i class="fa fa-clock-o fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
-		'href'  => 'http://mysite.com/my-page/',
+		'href'  => '/latest/',
 		'meta'  => array( 'class' => 'my-toolbar-icon' )
 	);
 	$wp_admin_bar->add_node( $args );
 }
 
-add_action( 'admin_bar_menu', 'toolbar_link_to_challenge', 999 );
+//TOOL BAR CHALLENGE
+add_action( 'admin_bar_menu', 'toolbar_link_to_challenge', 989 );
 
 function toolbar_link_to_challenge( $wp_admin_bar ) {
 	$args = array(
 		'id'    => 'my_challenge',
 		'title' => '<i class="fa fa-grav fa-3x" style="font-family:FontAwesome; font-size:1.8em;"></i>',
-		'href'  => 'http://mysite.com/my-page/',
+		'href'  => '#',
 		'meta'  => array( 'class' => 'my-toolbar-icon' )
 	);
 	$wp_admin_bar->add_node( $args );
@@ -479,7 +512,7 @@ function toolbar_link_to_challenge( $wp_admin_bar ) {
 
 
 
-
+//TOOL BAR - Prevent mobile hiding
 function show_custom_admin_menu() {
     echo '
     <style type="text/css">

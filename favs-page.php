@@ -40,10 +40,10 @@ get_header(); ?>
 				<?php 
 				$the_favs = get_user_favorites($user_id = null, $site_id = null, $filters = null);
 				$fav_number = count($the_favs);
-				$i = 1;
+				$i = 0;
 				echo '<div class="team-content"><div class="masonry">';
 
-				while ($i <= $fav_number) {
+				while ($i <= $fav_number-1) {
 
 					$fav_id = $the_favs[$i];	
 					echo '<div class="item">';
